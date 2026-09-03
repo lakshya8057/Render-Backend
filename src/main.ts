@@ -4,6 +4,11 @@ import { AppModule } from './app.module';
 import * as path from 'path';
 import * as fs from 'fs';
 
+// BigInt serialization fix for JSON.stringify
+(BigInt.prototype as any).toJSON = function () {
+  return Number(this);
+};
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
