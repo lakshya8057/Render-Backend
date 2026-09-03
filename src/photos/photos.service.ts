@@ -37,7 +37,7 @@ export class PhotosService {
 
   async findOne(id: string) {
     const photo = await this.prisma.photo.findUnique({ where: { id } });
-    if (!photo) throw new NotFoundException(Photo with ID "" not found);
+    if (!photo) throw new NotFoundException(`Photo with ID "${id}" not found`);
     return photo;
   }
 
@@ -58,7 +58,7 @@ export class PhotosService {
     const filePath = path.join(process.cwd(), uploadDir, photo.filename);
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     await this.prisma.photo.delete({ where: { id } });
-    return { message: Photo "" deleted successfully };
+    return { message: `Photo "${photo.title}" deleted successfully` };
   }
 
   async getStats() {

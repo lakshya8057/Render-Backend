@@ -14,7 +14,7 @@ import { UpdatePhotoDto } from './dto/update-photo.dto';
 const storage = diskStorage({
   destination: join(process.cwd(), process.env.UPLOAD_DIR || 'uploads'),
   filename: (req, file, cb) => {
-    cb(null, ${uuidv4()});
+    cb(null, `${uuidv4()}${extname(file.originalname)}`);
   },
 });
 
