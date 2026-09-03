@@ -1,4 +1,4 @@
-﻿import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -7,15 +7,11 @@ import { PhotosModule } from './photos/photos.module';
 
 @Module({
   imports: [
-    // Load .env file globally
     ConfigModule.forRoot({ isGlobal: true }),
-
-    // Serve uploaded images statically at /uploads/*
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), process.env.UPLOAD_DIR || 'uploads'),
       serveRoot: '/uploads',
     }),
-
     PhotosModule,
   ],
   providers: [PrismaService],

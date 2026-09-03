@@ -1,4 +1,4 @@
-﻿import {
+import {
   Controller, Get, Post, Put, Delete,
   Body, Param, UseInterceptors, UploadedFile,
   ParseUUIDPipe, HttpCode, HttpStatus, BadRequestException,
@@ -14,7 +14,7 @@ import { UpdatePhotoDto } from './dto/update-photo.dto';
 const storage = diskStorage({
   destination: join(process.cwd(), process.env.UPLOAD_DIR || 'uploads'),
   filename: (req, file, cb) => {
-    cb(null, `${uuidv4()}${extname(file.originalname)}`);
+    cb(null, ${uuidv4()});
   },
 });
 
@@ -28,7 +28,6 @@ const imageFileFilter = (req: any, file: any, cb: any) => {
 export class PhotosController {
   constructor(private readonly photosService: PhotosService) {}
 
-  /** POST /api/photos - Upload a new photo */
   @Post()
   @UseInterceptors(FileInterceptor('image', {
     storage,
@@ -42,25 +41,21 @@ export class PhotosController {
     return this.photosService.create(createPhotoDto, file);
   }
 
-  /** GET /api/photos - Get all photos */
   @Get()
   async findAll() {
     return this.photosService.findAll();
   }
 
-  /** GET /api/photos/stats - Gallery stats */
   @Get('stats')
   async getStats() {
     return this.photosService.getStats();
   }
 
-  /** GET /api/photos/:id - Get single photo */
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.photosService.findOne(id);
   }
 
-  /** PUT /api/photos/:id - Update photo */
   @Put(':id')
   async update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -69,7 +64,6 @@ export class PhotosController {
     return this.photosService.update(id, updatePhotoDto);
   }
 
-  /** DELETE /api/photos/:id - Delete photo */
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id', ParseUUIDPipe) id: string) {

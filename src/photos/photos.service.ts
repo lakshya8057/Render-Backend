@@ -1,4 +1,4 @@
-﻿import {
+import {
   Injectable,
   NotFoundException,
   BadRequestException,
@@ -17,10 +17,8 @@ export class PhotosService {
     private readonly config: ConfigService,
   ) {}
 
-  /** Upload a new photo and save metadata to DB */
   async create(dto: CreatePhotoDto, file: Express.Multer.File) {
     if (!file) throw new BadRequestException('Image file is required');
-
     return this.prisma.photo.create({
       data: {
         title: dto.title,
@@ -33,23 +31,18 @@ export class PhotosService {
     });
   }
 
-  /** Get all photos, newest first */
   async findAll() {
-    return this.prisma.photo.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
+    return this.prisma.photo.findMany({ orderBy: { createdAt: 'desc' } });
   }
 
-  /** Get a single photo by ID */
   async findOne(id: string) {
     const photo = await this.prisma.photo.findUnique({ where: { id } });
-    if (!photo) throw new NotFoundException(`Photo with ID "${id}" not found`);
+    if (!photo) throw new NotFoundException(Photo with ID "" not found);
     return photo;
   }
 
-  /** Update photo title/description */
   async update(id: string, dto: UpdatePhotoDto) {
-    await this.findOne(id); // ensure exists
+    await this.findOne(id);
     return this.prisma.photo.update({
       where: { id },
       data: {
@@ -59,20 +52,15 @@ export class PhotosService {
     });
   }
 
-  /** Delete photo record and file from disk */
   async remove(id: string) {
     const photo = await this.findOne(id);
-
-    // Remove file from disk
     const uploadDir = this.config.get('UPLOAD_DIR', 'uploads');
     const filePath = path.join(process.cwd(), uploadDir, photo.filename);
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-
     await this.prisma.photo.delete({ where: { id } });
-    return { message: `Photo "${photo.title}" deleted successfully` };
+    return { message: Photo "" deleted successfully };
   }
 
-  /** Gallery stats */
   async getStats() {
     const [count, aggregate] = await Promise.all([
       this.prisma.photo.count(),
